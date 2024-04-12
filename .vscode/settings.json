@@ -1,0 +1,11 @@
+{
+    "java.project.sourcePaths": [
+        "src"
+    ],
+    "vmArgs": "-Djava.library.path=\"lib\\natives\\",
+    "java.project.referencedLibraries": [
+        "lib\\jars\\lwjgl_util.jar",
+        "lib\\jars\\slick-util.jar",
+        "lib\\jars\\lwjgl.jar"
+    ],
+}
