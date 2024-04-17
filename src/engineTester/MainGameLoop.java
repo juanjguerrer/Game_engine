@@ -22,9 +22,9 @@ public class MainGameLoop {
 		StaticShader shader = new StaticShader();
 		Renderer renderer = new Renderer(shader);
 
-		RawModel model = OBJLoader.loadObjModel("sphere", loader);
+		RawModel model = OBJLoader.loadObjModel("dragon", loader);
 
-		ModelTexture texture = new ModelTexture(loader.loadTexture("sphere2"));
+		ModelTexture texture = new ModelTexture(loader.loadTexture("white"));
 		TexturedModel staticModel = new TexturedModel(model, texture);
 
 		Entity entity = new Entity(staticModel, new Vector3f(0, 0, -10),

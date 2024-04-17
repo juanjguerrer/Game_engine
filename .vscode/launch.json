@@ -6,6 +6,14 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MainGameLoop",
+            "request": "launch",
+            "mainClass": "engineTester.MainGameLoop",
+            "projectName": "Game_engine_c4625943",
+            "vmArgs": "-Djava.library.path=lib/natives"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
