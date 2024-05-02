@@ -29,27 +29,63 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		
-		String fileName = "football";
+		String fileName = "planet";
 		ModelData data = OBJFileLoader.loadOBJ(fileName);
 
-		RawModel treeModel = loader.loadToVAO(data.getVertices(), data.getTextureCoords(),
+		RawModel model = loader.loadToVAO(data.getVertices(), data.getTextureCoords(),
 		data.getNormals(),data.getIndices());
 		
-		TexturedModel staticModel = new TexturedModel(treeModel,
-		new ModelTexture(loader.loadTexture(fileName)));
+		TexturedModel sunModel = new TexturedModel(model,
+		new ModelTexture(loader.loadTexture("sun2")));
+		Entity solecito = new Entity(sunModel, new Vector3f(0,0,0), 0, 0, 0, 1);  
 		
-		List<Entity> entities = new ArrayList<Entity>();
-		Random random = new Random();
-		for(int i=0;i<15;i++){
-			entities.add(new Entity(staticModel, new Vector3f(random.nextFloat()*70 - 35,2.5f,random.nextFloat() *-150 - 30),0,0,0,3));
-		}
-		
-		Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
+		TexturedModel mercuryModel = new TexturedModel(model,
+		new ModelTexture(loader.loadTexture("mercury")));
+		Entity mercury = new Entity(mercuryModel, new Vector3f(12,0,0), 0, 0, 0, 0.1f);
+
+		TexturedModel venusModel = new TexturedModel(model,
+		new ModelTexture(loader.loadTexture("venus")));
+		Entity venus = new Entity(venusModel, new Vector3f(15,0,0), 0, 0, 0, 0.1f);
+
+		TexturedModel earthModel = new TexturedModel(model,
+		new ModelTexture(loader.loadTexture("earth")));
+		Entity earth = new Entity(earthModel, new Vector3f(20,0,0), 0, 0, 0, 0.3f);
+
+		TexturedModel marsModel = new TexturedModel(model,
+		new ModelTexture(loader.loadTexture("mars")));
+		Entity mars = new Entity(marsModel, new Vector3f(28,0,0), 0, 0, 0, 0.25f);
+
+		TexturedModel jupyterModel = new TexturedModel(model,
+		new ModelTexture(loader.loadTexture("jupyter")));
+		Entity jupyter = new Entity(jupyterModel, new Vector3f(40,0,0), 0, 0, 0, 0.6f);
+
+		TexturedModel saturnModel = new TexturedModel(model,
+		new ModelTexture(loader.loadTexture("saturn")));
+		Entity saturn = new Entity(saturnModel, new Vector3f(55,0,0), 0, 0, 0, 0.5f);
+
+		ModelData ringsData = OBJFileLoader.loadOBJ("rings");
+		RawModel ringsD = loader.loadToVAO(ringsData.getVertices(), ringsData.getTextureCoords(),
+		ringsData.getNormals(),ringsData.getIndices());
+
+		TexturedModel ringsModel = new TexturedModel(ringsD,
+		new ModelTexture(loader.loadTexture("rings")));
+		Entity rings = new Entity(ringsModel, new Vector3f(55,0,67), 0, 0, 0, 2.5f);
+
+
+		TexturedModel uranusModel = new TexturedModel(model,
+		new ModelTexture(loader.loadTexture("uranus")));
+		Entity uranus = new Entity(uranusModel, new Vector3f(65,0,0), 0, 0, 0, 0.1f);
+
+		TexturedModel neptuneModel = new TexturedModel(model,
+		new ModelTexture(loader.loadTexture("neptune")));
+		Entity neptune = new Entity(neptuneModel, new Vector3f(70,0,0), 0, 0, 0, 0.1f);
+
+		Light light = new Light(new Vector3f(100,100,100),new Vector3f(1,1,1));
 		List<Terrain> terrains = new ArrayList<Terrain>();
-		terrains.add(new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("grass"))));
-		terrains.add(new Terrain(-1,-1,loader,new ModelTexture(loader.loadTexture("grass"))));
-		terrains.add(new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass"))));
-		terrains.add(new Terrain(-1,0,loader,new ModelTexture(loader.loadTexture("grass"))));
+		//terrains.add(new Terrain(0,-1,loader,new ModelTexture(loader.loadTexture("grass"))));
+		//terrains.add(new Terrain(-1,-1,loader,new ModelTexture(loader.loadTexture("grass"))));
+		//terrains.add(new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass"))));
+		//terrains.add(new Terrain(-1,0,loader,new ModelTexture(loader.loadTexture("grass"))));
 		
 		Camera camera = new Camera();	
 		MasterRenderer renderer = new MasterRenderer();
@@ -60,10 +96,17 @@ public class MainGameLoop {
 			for(Terrain terrain:terrains){
 				renderer.processTerrain(terrain);
 			}
-			for(Entity entity:entities){
-				renderer.processEntity(entity);
-				entity.increaseRotation(0, 1, 0);
-			}
+			renderer.processEntity(solecito);
+			renderer.processEntity(mercury);
+			renderer.processEntity(venus);
+			renderer.processEntity(earth);
+			renderer.processEntity(mars);
+			renderer.processEntity(jupyter);
+			renderer.processEntity(saturn);
+			renderer.processEntity(rings);
+			renderer.processEntity(uranus);
+			renderer.processEntity(neptune);
+
 			renderer.render(light, camera);
 			DisplayManager.updateDisplay();
 		}
