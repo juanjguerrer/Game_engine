@@ -31,7 +31,11 @@ public class MainGameLoop {
 		
 		RawModel treeModel = OBJLoader.loadObjModel("tree",loader);
 		TexturedModel tree = new TexturedModel(treeModel,new ModelTexture(loader.loadTexture("tree")));
-		
+
+		TexturedModel flower = new TexturedModel(OBJLoader.loadObjModel("grassModel",loader),
+		new ModelTexture(loader.loadTexture("flower")));
+		flower.getTexture().setHasTransparency(true);
+
 		TexturedModel grass = new TexturedModel(OBJLoader.loadObjModel("grassModel",loader),
 		new ModelTexture(loader.loadTexture("grassTexture")));
 		grass.getTexture().setHasTransparency(true);
@@ -50,6 +54,9 @@ public class MainGameLoop {
             0,0,0,1));
 			entities.add(new Entity(fern, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),
             0,0,0,0.6f));
+			if(i%3==0)
+				entities.add(new Entity(flower, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),
+            	0,0,0,1.5f));
 		}
 		
 		Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
