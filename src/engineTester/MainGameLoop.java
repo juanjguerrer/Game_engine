@@ -23,6 +23,7 @@ import textures.TerrainTexturePack;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 
 public class MainGameLoop {
 
@@ -96,10 +97,16 @@ public class MainGameLoop {
 		
 		Camera camera = new Camera();	
 		MasterRenderer renderer = new MasterRenderer();
+
+		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
+		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("playerTexture")));
+
+		Player player = new Player(stanfordBunny, new Vector3f(100, 0, -50), 0, 0, 0, 1);
 		
 		while(!Display.isCloseRequested()){
 			camera.move();
-			
+			player.move();
+			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);
 			renderer.processTerrain(terrain3);
