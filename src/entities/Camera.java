@@ -3,6 +3,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.*;
 public class Camera {
 
+    private static final float Y_OFFSET = 5;
     private float distanceFromPlayer = 50;
     private float angleAroundPlayer = 0;
 
@@ -46,7 +47,7 @@ public class Camera {
         
         position.x = player.getPosition().x - offsetX;
         position.z = player.getPosition().z - offsetZ;
-        position.y = player.getPosition().y + verticalDistance;
+        position.y = player.getPosition().y + verticalDistance+Y_OFFSET;
     }
 
     private float calculateHorizontalDistance(){

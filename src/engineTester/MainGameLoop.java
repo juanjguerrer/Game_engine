@@ -88,10 +88,10 @@ public class MainGameLoop {
 		
 		Light light = new Light(new Vector3f(20000,40000,20000),new Vector3f(1,1,1));
 		
-		Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap);
-		Terrain terrain2 = new Terrain(-1,-1,loader,texturePack,blendMap);
-		Terrain terrain3 = new Terrain(0,0,loader,texturePack,blendMap);
-		Terrain terrain4 = new Terrain(-1,0,loader,texturePack,blendMap);
+		Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap, "heightmap");
+		Terrain terrain2 = new Terrain(-1,-1,loader,texturePack,blendMap, "heightmap");
+		Terrain terrain3 = new Terrain(0,0,loader,texturePack,blendMap, "heightmap");
+		Terrain terrain4 = new Terrain(-1,0,loader,texturePack,blendMap, "heightmap");
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
