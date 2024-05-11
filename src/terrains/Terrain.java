@@ -2,7 +2,6 @@ package terrains;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
 
 import javax.imageio.ImageIO;
 
