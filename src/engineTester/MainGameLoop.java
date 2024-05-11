@@ -28,7 +28,7 @@ import guis.GuiTexture;
 
 public class MainGameLoop {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args){
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		
@@ -58,7 +58,11 @@ public class MainGameLoop {
 
 		TexturedModel bobble = new TexturedModel(OBJLoader.loadObjModel("lowPolyTree", loader),
 		new ModelTexture(loader.loadTexture("lowPolyTree")));
+
+		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lamp", loader), 
+		new ModelTexture(loader.loadTexture("lamp")));
 		
+		lamp.getTexture().setUseFakeLighting(true);
 		grass.getTexture().setHasTransparency(true);
 		grass.getTexture().setUseFakeLighting(true);
 		flower.getTexture().setHasTransparency(true);
@@ -104,19 +108,26 @@ public class MainGameLoop {
 				entities.add(new Entity(tree, new Vector3f(x, y, z), 0, 0, 0, random.nextFloat() * 1 + 4));
 			}
 		}
-			
 		
-		Light light = new Light(new Vector3f(20000,40000,20000),new Vector3f(1,1,1));
+		
+		
+		Light light = new Light(new Vector3f(0,1000,-7000),new Vector3f(0.4f,0.4f,0.4f));
 		List<Light> lights = new ArrayList<Light>();
 		lights.add(light);
-		lights.add(new Light(new Vector3f(-200,10,-200), new Vector3f(10,0,0)));
-		lights.add(new Light(new Vector3f(200,10,-200), new Vector3f(0,10,0)));
+		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0,2,2), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
+
+		entities.add(new Entity(lamp, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
+		entities.add(new Entity(lamp, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
+		entities.add(new Entity(lamp, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1));
+
 		MasterRenderer renderer = new MasterRenderer();
 		
 		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
 		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("playerTexture")));
 		
-		Player player = new Player(stanfordBunny, new Vector3f(0, 0, 0), 0, 180, 0, 0.6f);
+		Player player = new Player(stanfordBunny, new Vector3f(153, 5, -274), 0, 100, 0, 0.6f);
 		Camera camera = new Camera(player);	
 		
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
