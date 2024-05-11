@@ -25,8 +25,7 @@ import entities.Player;
 
 public class MainGameLoop {
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws InterruptedException {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		
@@ -61,26 +60,39 @@ public class MainGameLoop {
 		flower.getTexture().setUseFakeLighting(true);
 		fern.getTexture().setHasTransparency(true);
 		
-		Terrain terrain = new Terrain(0,-1,loader,texturePack,blendMap, "heightmap");
+		Terrain[][] terrain;
+		terrain = new Terrain[2][2];
+		Terrain terrain1 = new Terrain(0,-1,loader,texturePack,
+		blendMap, "heightmap"); // De 0 a 800 y de 0 a -800
+		Terrain terrain2 = new Terrain(-1,-1,loader,texturePack,
+		blendMap, "heightmap"); // De 0 a -800 y de 0 a -800
+		Terrain terrain3 = new Terrain(0,0,loader,texturePack,
+		blendMap, "heightmap"); // De 0 a 800 y de 0 a 800
+		Terrain terrain4 = new Terrain(-1,0,loader,texturePack,
+		blendMap, "heightmap"); // De 0 a -800 y de 0 a 800
+		terrain[0][0] = terrain1;
+		terrain[1][0] = terrain2;
+		terrain[0][1] = terrain3;
+		terrain[1][1] = terrain4;
 		List<Entity> entities = new ArrayList<Entity>();
 		Random random = new Random();
 		for(int i=0;i<400;i++){
 			if(i%20==0){
 				float x = random.nextFloat() * 800 - 400;
 				float z = random.nextFloat() * -600;
-				float y = terrain.getHeightOfTerrain(x, z);
+				float y = terrain[0][0].getHeightOfTerrain(x, z);
 				entities.add(new Entity(fern, new Vector3f( x, y, z),0, random.nextFloat()*360,0,0.9f));
 			}
 			if (i % 5 == 0) {
 				float x = random.nextFloat() * 800 - 400;
 				float z = random.nextFloat() * -600;
-				float y = terrain.getHeightOfTerrain(x, z);
+				float y = terrain[0][0].getHeightOfTerrain(x, z);
 				entities.add(new Entity(bobble, new Vector3f(x, y, z), 0,
 				random.nextFloat() * 360, 0, random.nextFloat() * 0.1f + 0.6f));
 
 				x = random.nextFloat() * 800 - 400;
 				z = random.nextFloat() * -600;
-				y = terrain.getHeightOfTerrain(x, z);
+				y = terrain[0][0].getHeightOfTerrain(x, z);
 				entities.add(new Entity(tree, new Vector3f(x, y, z), 0, 0, 0, random.nextFloat() * 1 + 4));
 			}
 		}
@@ -88,26 +100,30 @@ public class MainGameLoop {
 		
 		Light light = new Light(new Vector3f(20000,40000,20000),new Vector3f(1,1,1));
 		
-		Terrain terrain2 = new Terrain(-1,-1,loader,texturePack,blendMap, "heightmap");
-		Terrain terrain3 = new Terrain(0,0,loader,texturePack,blendMap, "heightmap");
-		Terrain terrain4 = new Terrain(-1,0,loader,texturePack,blendMap, "heightmap");
-		
 		MasterRenderer renderer = new MasterRenderer();
 		
 		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
 		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("playerTexture")));
 		
-		Player player = new Player(stanfordBunny, new Vector3f(100, 0, -50), 0, 180, 0, 0.6f);
+		Player player = new Player(stanfordBunny, new Vector3f(0, 0, 0), 0, 180, 0, 0.6f);
 		Camera camera = new Camera(player);	
 		
 		while(!Display.isCloseRequested()){
-			player.move(terrain);
+			if(player.getPosition().x>=0 && player.getPosition().z<=0){
+				player.move(terrain[0][0]);
+			}
+			else if(player.getPosition().x<0 && player.getPosition().z<0){
+				player.move(terrain[1][0]);
+			}
+			else if(player.getPosition().x>0 && player.getPosition().z>0){
+				player.move(terrain[0][1]);
+			}
+			else if(player.getPosition().x<0 && player.getPosition().z>0){
+				player.move(terrain[1][1]);
+			}
 			camera.move();
 			renderer.processEntity(player);
-			renderer.processTerrain(terrain);
-			//renderer.processTerrain(terrain2);
-			//renderer.processTerrain(terrain3);
-			//renderer.processTerrain(terrain4);
+			renderer.processTerrains(terrain);
 			for(Entity entity:entities){
 				renderer.processEntity(entity);
 			}
@@ -122,3 +138,8 @@ public class MainGameLoop {
 	}
 
 }
+/*
+ * hot to know in which cuadrant a coordinate pair is?
+The first one consist of this points 0,0;0,-800; 800,-800;800,0
+second one 0,0,
+ */
