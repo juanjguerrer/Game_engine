@@ -48,8 +48,10 @@ public class MainGameLoop {
 		TexturedModel flower = new TexturedModel(OBJLoader.loadObjModel("grassModel",loader),
 		new ModelTexture(loader.loadTexture("flower")));
 		
+		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
+		fernTextureAtlas.setNumberOfRows(2);
 		TexturedModel fern = new TexturedModel(OBJLoader.loadObjModel("fern", loader),
-		new ModelTexture(loader.loadTexture("fern")));
+		fernTextureAtlas);
 
 		TexturedModel bobble = new TexturedModel(OBJLoader.loadObjModel("lowPolyTree", loader),
 		new ModelTexture(loader.loadTexture("lowPolyTree")));
@@ -74,25 +76,28 @@ public class MainGameLoop {
 		terrain[1][0] = terrain2;
 		terrain[0][1] = terrain3;
 		terrain[1][1] = terrain4;
+
+
+
 		List<Entity> entities = new ArrayList<Entity>();
 		Random random = new Random();
 		for(int i=0;i<400;i++){
-			if(i%20==0){
+			if(i%2==0){
 				float x = random.nextFloat() * 800 - 400;
 				float z = random.nextFloat() * -600;
-				float y = terrain[0][0].getHeightOfTerrain(x, z);
-				entities.add(new Entity(fern, new Vector3f( x, y, z),0, random.nextFloat()*360,0,0.9f));
+				float y = terrain[get_i(x,z)][get_j(x,z)].getHeightOfTerrain(x, z);
+				entities.add(new Entity(fern, random.nextInt(4),new Vector3f( x, y, z),0, random.nextFloat()*360,0,0.9f));
 			}
 			if (i % 5 == 0) {
 				float x = random.nextFloat() * 800 - 400;
 				float z = random.nextFloat() * -600;
-				float y = terrain[0][0].getHeightOfTerrain(x, z);
+				float y = terrain[get_i(x,z)][get_j(x,z)].getHeightOfTerrain(x, z);
 				entities.add(new Entity(bobble, new Vector3f(x, y, z), 0,
 				random.nextFloat() * 360, 0, random.nextFloat() * 0.1f + 0.6f));
 
 				x = random.nextFloat() * 800 - 400;
 				z = random.nextFloat() * -600;
-				y = terrain[0][0].getHeightOfTerrain(x, z);
+				y = terrain[get_i(x,z)][get_j(x,z)].getHeightOfTerrain(x, z);
 				entities.add(new Entity(tree, new Vector3f(x, y, z), 0, 0, 0, random.nextFloat() * 1 + 4));
 			}
 		}
@@ -109,18 +114,8 @@ public class MainGameLoop {
 		Camera camera = new Camera(player);	
 		
 		while(!Display.isCloseRequested()){
-			if(player.getPosition().x>=0 && player.getPosition().z<=0){
-				player.move(terrain[0][0]);
-			}
-			else if(player.getPosition().x<0 && player.getPosition().z<0){
-				player.move(terrain[1][0]);
-			}
-			else if(player.getPosition().x>0 && player.getPosition().z>0){
-				player.move(terrain[0][1]);
-			}
-			else if(player.getPosition().x<0 && player.getPosition().z>0){
-				player.move(terrain[1][1]);
-			}
+			player.move(terrain[get_i(player.getPosition().x,player.getPosition().z)]
+			[get_j(player.getPosition().x,player.getPosition().z)]); 
 			camera.move();
 			renderer.processEntity(player);
 			renderer.processTerrains(terrain);
@@ -135,6 +130,38 @@ public class MainGameLoop {
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
 
+	}
+
+	private static int get_j(float x, float z) {
+		if(x>=0 && z<=0){
+			return 0;
+		}
+		else if(x<0 && z<0){
+			return 0;
+		}
+		else if(x>0 && z>0){
+			return 1;
+		}
+		else if(x<0 && z>0){
+			return 1;
+		}
+		return 0;
+	}
+
+	private static int get_i(float x, float z) {
+		if(x>=0 && z<=0){
+			return 0;
+		}
+		else if(x<0 && z<0){
+			return 1;
+		}
+		else if(x>0 && z>0){
+			return 0;
+		}
+		else if(x<0 && z>0){
+			return 1;
+		}
+		return 0;
 	}
 
 }
