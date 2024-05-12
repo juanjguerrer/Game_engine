@@ -27,6 +27,9 @@ import guis.GuiRenderer;
 import guis.GuiTexture;
 
 public class MainGameLoop {
+	private static final float RED = 0.53f;
+	private static final float GREEN = 0.8f;
+	private static final float BLUE = 0.92f;
 
 	public static void main(String[] args){
 		DisplayManager.createDisplay();
@@ -109,9 +112,7 @@ public class MainGameLoop {
 			}
 		}
 		
-		
-		
-		Light light = new Light(new Vector3f(0,1000,-7000),new Vector3f(0.4f,0.4f,0.4f));
+		Light light = new Light(new Vector3f(0,100,-700),new Vector3f(RED,BLUE,GREEN));
 		List<Light> lights = new ArrayList<Light>();
 		lights.add(light);
 		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
@@ -122,7 +123,7 @@ public class MainGameLoop {
 		entities.add(new Entity(lamp, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
 		entities.add(new Entity(lamp, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1));
 
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 		
 		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
 		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(loader.loadTexture("playerTexture")));
