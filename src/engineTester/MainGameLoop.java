@@ -19,6 +19,7 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.MousePicker;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
@@ -64,7 +65,10 @@ public class MainGameLoop {
 
 		TexturedModel lamp = new TexturedModel(OBJLoader.loadObjModel("lamp", loader), 
 		new ModelTexture(loader.loadTexture("lamp")));
-		
+
+		Entity lampE = new Entity(lamp, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1);
+
+		lamp.getTexture().setUseFakeLighting(true);
 		lamp.getTexture().setUseFakeLighting(true);
 		grass.getTexture().setHasTransparency(true);
 		grass.getTexture().setUseFakeLighting(true);
@@ -90,6 +94,7 @@ public class MainGameLoop {
 
 
 		List<Entity> entities = new ArrayList<Entity>();
+		entities.add(lampE);
 		Random random = new Random();
 		for(int i=0;i<400;i++){
 			if(i%2==0){
@@ -111,10 +116,11 @@ public class MainGameLoop {
 				entities.add(new Entity(tree, new Vector3f(x, y, z), 0, 0, 0, random.nextFloat() * 1 + 4));
 			}
 		}
-		
+		Light lampLight = new Light(new Vector3f(185, 10, -293), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f));
 		Light light = new Light(new Vector3f(0,100,-700),new Vector3f(RED,BLUE,GREEN));
 		List<Light> lights = new ArrayList<Light>();
 		lights.add(light);
+		lights.add(lampLight);
 		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
 		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0,2,2), new Vector3f(1, 0.01f, 0.002f)));
 		lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
@@ -138,10 +144,18 @@ public class MainGameLoop {
 
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
+		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
+
 		while(!Display.isCloseRequested()){
 			player.move(terrain[get_i(player.getPosition().x,player.getPosition().z)]
 			[get_j(player.getPosition().x,player.getPosition().z)]); 
 			camera.move();
+			picker.update();
+			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+			if(terrainPoint != null){
+				lampE.setPosition(terrainPoint);
+				lampLight.setPosition(new Vector3f(terrainPoint.x,terrainPoint.y+15,terrainPoint.z));
+			}
 			renderer.processEntity(player);
 			renderer.processTerrains(terrain);
 			for(Entity entity:entities){
