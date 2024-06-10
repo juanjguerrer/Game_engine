@@ -13,7 +13,6 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public abstract class ShaderProgram {
-	
 	private int programID;
 	private int vertexShaderID;
 	private int fragmentShaderID;

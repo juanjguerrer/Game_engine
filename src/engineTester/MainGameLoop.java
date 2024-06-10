@@ -8,6 +8,7 @@ import models.RawModel;
 import models.TexturedModel;
 import objConverter.OBJLoader;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -69,7 +70,6 @@ public class MainGameLoop {
 		Entity lampE = new Entity(lamp, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1);
 
 		lamp.getTexture().setUseFakeLighting(true);
-		lamp.getTexture().setUseFakeLighting(true);
 		grass.getTexture().setHasTransparency(true);
 		grass.getTexture().setUseFakeLighting(true);
 		flower.getTexture().setHasTransparency(true);
@@ -122,12 +122,8 @@ public class MainGameLoop {
 		lights.add(light);
 		lights.add(lampLight);
 		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
-		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0,2,2), new Vector3f(1, 0.01f, 0.002f)));
-		lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2,2,0), new Vector3f(1, 0.01f, 0.002f)));
 
 		entities.add(new Entity(lamp, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
-		entities.add(new Entity(lamp, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
-		entities.add(new Entity(lamp, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1));
 
 		MasterRenderer renderer = new MasterRenderer(loader);
 		
@@ -146,6 +142,8 @@ public class MainGameLoop {
 
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 
+		boolean mouseButtonHeld = false;
+
 		while(!Display.isCloseRequested()){
 			player.move(terrain[get_i(player.getPosition().x,player.getPosition().z)]
 			[get_j(player.getPosition().x,player.getPosition().z)]); 
@@ -155,6 +153,15 @@ public class MainGameLoop {
 			if(terrainPoint != null){
 				lampE.setPosition(terrainPoint);
 				lampLight.setPosition(new Vector3f(terrainPoint.x,terrainPoint.y+15,terrainPoint.z));
+				if(Mouse.isButtonDown(0)){
+					if(!mouseButtonHeld){
+						entities.add(new Entity(lamp, new Vector3f(terrainPoint.x,terrainPoint.y,terrainPoint.z), 0, 0, 0, 1));
+						lights.add(new Light(new Vector3f(terrainPoint.x,terrainPoint.y+15,terrainPoint.z), new Vector3f(2,0,0), new Vector3f(1, 0.01f, 0.002f)));
+						mouseButtonHeld = true;
+					}
+				} else {
+					mouseButtonHeld = false;
+				}
 			}
 			renderer.processEntity(player);
 			renderer.processTerrains(terrain);

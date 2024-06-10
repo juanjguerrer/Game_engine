@@ -1,8 +1,10 @@
 #version 400 core
 
+const int maxLights = 30;
+
 in vec2 pass_textureCoordinates;
 in vec3 surfaceNormal;
-in vec3 toLightVector[4];
+in vec3 toLightVector[maxLights];
 in vec3 toCameraVector;
 in float visibility;
 
@@ -14,8 +16,8 @@ uniform sampler2D gTexture;
 uniform sampler2D bTexture;
 uniform sampler2D blendMap;
 
-uniform vec3 lightColour[4];
-uniform vec3 attenuation[4];
+uniform vec3 lightColour[maxLights];
+uniform vec3 attenuation[maxLights];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColour;
